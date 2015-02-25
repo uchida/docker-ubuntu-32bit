@@ -4,9 +4,9 @@
 ### settings
 arch=i386
 suite=trusty
-chroot_dir='/var/chroot/trusty'
+chroot_dir="/var/chroot/$suite"
 apt_mirror='http://archive.ubuntu.com/ubuntu'
-docker_image='32bit/ubuntu:14.04'
+docker_image="auchida/ubuntu-32bit:$suite"
 
 ### make sure that the required tools are installed
 apt-get install -y docker.io debootstrap dchroot
@@ -17,11 +17,13 @@ debootstrap --variant=minbase --arch=$arch $suite $chroot_dir $apt_mirror
 
 ### update the list of package sources
 cat <<EOF > $chroot_dir/etc/apt/sources.list
-deb $apt_mirror $suite main restricted universe multiverse
-deb $apt_mirror $suite-updates main restricted universe multiverse
-deb $apt_mirror $suite-backports main restricted universe multiverse
-deb http://security.ubuntu.com/ubuntu $suite-security main restricted universe multiverse
-deb http://extras.ubuntu.com/ubuntu $suite main
+deb $apt_mirror $suite main restricted
+deb-src $apt_mirror $suite main restricted
+
+deb $apt_mirror $suite-updates main restricted
+deb-src $apt_mirror $suite-updates main restricted
+
+deb http://archive.ubuntu.com/ubuntu/ $suite universe
 EOF
 
 ### install ubuntu-minimal
