@@ -32,6 +32,13 @@ mount -o bind /proc $chroot_dir/proc
 chroot $chroot_dir apt-get update
 chroot $chroot_dir apt-get -y install ubuntu-minimal
 
+### workaround, http://github.com/docker/docker/issues/1024
+chroot $chroot_dir dpkg-divert --local --rename --add /sbin/initctl
+chroot $chroot_dir ln -sf /bin/true /sbin/initctl
+
+### workaround, to skip failure to update libpam-systemd
+chroot $chroot_dir ln -sf /bin/true /etc/init.d/systemd-logind
+
 ### cleanup and unmount /proc
 chroot $chroot_dir apt-get autoclean
 chroot $chroot_dir apt-get clean
