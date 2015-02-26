@@ -46,6 +46,10 @@ chroot $chroot_dir apt-get autoremove
 rm $chroot_dir/etc/resolv.conf
 umount $chroot_dir/proc
 
+### cleanup
+find $chroot_dir/var/cache -type f -delete
+find $chroot_dir/var/lib/apt/lists -type f -delete
+
 ### create a tar archive from the chroot directory
 tar cfz ubuntu.tgz -C $chroot_dir .
 
